@@ -13,7 +13,7 @@ const eventRoutes = Router();
 eventRoutes.use(validarJWT);
 
 eventRoutes.get('/', getEvent);
-eventRoutes.post('/postEvent',
+eventRoutes.post('/create',
     [
         check('title', 'El titulo es obligatorio').not().isEmpty(),
         check('start', 'Fecha de inicio es obligatoria').custom(isDate),
@@ -22,7 +22,7 @@ eventRoutes.post('/postEvent',
     ],
     addEvent
 );
-eventRoutes.put('/updateEvent/:id',
+eventRoutes.put('/update/:id',
     [
         check('title', 'El titulo es obligatorio').not().isEmpty(),
         check('start', 'Fecha de inicio es obligatoria').custom(isDate),
@@ -31,5 +31,5 @@ eventRoutes.put('/updateEvent/:id',
     ],
     updateEvent
 );
-eventRoutes.delete('/deleteEvent/:id', deleteEvent)
+eventRoutes.delete('/delete/:id', deleteEvent)
 export default eventRoutes;

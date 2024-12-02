@@ -1,7 +1,6 @@
-import mongoose from "mongoose"; 
-const { Schema } = mongoose; 
+import mongoose, { Schema } from "mongoose";
 
-const EventsSchema = new Schema({
+const EventSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -24,10 +23,11 @@ const EventsSchema = new Schema({
     }
 });
 
-EventsSchema.method('toJSON', function () {
+// Método para transformar el objeto a JSON
+EventSchema.method('toJSON', function () {
     const { __v, _id, ...object } = this.toObject();
-    object.id = _id; 
+    object.id = _id;
     return object;
 });
 
-export const Event = mongoose.model('Event', EventsSchema);
+export const Event = mongoose.model('Event', EventSchema);

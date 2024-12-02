@@ -1,19 +1,26 @@
-import { Event } from "../models/event.model.js";
+import { Event } from "../models/event.js";
 
 // Obtener eventos
 export const getEvent = async (req, res) => {
-    const events = await Event.find().populate('user', 'name');
-    res.json({
-        ok: true,
-        events
-    });
-}
+    try {
+        const events = await Event.find().populate('user', 'name');
+        res.json({
+            ok: true,
+            events
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error al obtener eventos'
+        });
+    }
+};
 
 // Agregar un evento
 export const addEvent = async (req, res) => {
     const { title, notes, start, end } = req.body;
     const user = req.uid;
-    console.log(user);
     try {
         const newEvent = new Event({
             title,
@@ -32,7 +39,8 @@ export const addEvent = async (req, res) => {
         console.error(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error al crear evento'
+            msg: 'Error al crear evento',
+            error: error.message 
         });
     }
 };
@@ -56,14 +64,14 @@ export const updateEvent = async (req, res) => {
                 msg: 'No tiene permisos para editar este evento'
             });
         }
-        const newEvent = {
+        const updatedEvent = {
             title,
             notes,
             start,
             end,
             user: uid
-        }
-        const eventoActualizado = await Event.findByIdAndUpdate(eventId, newEvent, { new: true });
+        };
+        const eventoActualizado = await Event.findByIdAndUpdate(eventId, updatedEvent, { new: true });
         res.json({
             ok: true,
             event: eventoActualizado
@@ -72,10 +80,11 @@ export const updateEvent = async (req, res) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error al actualizar evento'
+            msg: 'Error al actualizar evento',
+            error: error.message 
         });
     }
-}
+};
 
 // Eliminar un evento
 export const deleteEvent = async (req, res) => {
@@ -98,10 +107,11 @@ export const deleteEvent = async (req, res) => {
         await Event.findByIdAndDelete(eventId);
         res.json({ ok: true });
     } catch (error) {
-        console.log(error);
+        console.log(error );
         res.status(500).json({
             ok: false,
-            msg: 'Error al eliminar evento'
+            msg: 'Error al eliminar evento',
+            error: error.message 
         });
     }
 }
